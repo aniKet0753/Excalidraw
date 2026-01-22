@@ -1,27 +1,11 @@
-import { type JSX } from "react";
-
-export function Card({
-  className,
-  title,
-  children,
-  href,
-}: {
-  className?: string;
+interface cardprops {
   title: string;
-  children: React.ReactNode;
-  href: string;
-}): JSX.Element {
+}
+
+export function Card({ title }: cardprops) {
   return (
-    <a
-      className={className}
-      href={`${href}?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo"`}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <h2>
-        {title} <span>-&gt;</span>
-      </h2>
-      <p>{children}</p>
-    </a>
+    <div style={{marginTop:"3px"}} title={title}>
+      <h2 style={{color:"black",fontFamily:"Roboto", display:"flex", justifyContent:"center"}}>{title}</h2>
+    </div>
   );
 }

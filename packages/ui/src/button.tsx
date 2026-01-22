@@ -1,20 +1,28 @@
-"use client";
-
-import { ReactNode } from "react";
-
-interface ButtonProps {
-  children: ReactNode;
-  className?: string;
-  appName: string;
+interface Butoonprops {
+  label: string;
+    onClick?: () => void;
 }
 
-export const Button = ({ children, className, appName }: ButtonProps) => {
+export function Butoom({ label , onClick}: Butoonprops) {
   return (
     <button
-      className={className}
-      onClick={() => alert(`Hello from your ${appName} app!`)}
+    onClick={onClick}
+      style={{
+
+        height:"50px",
+        width:"200px",
+        backgroundColor: "#2563eb",
+        color: "#ffffff",
+        border: "none",
+        borderRadius: "6px",
+        alignItems: "center",
+        fontSize: "20px",
+        fontWeight: 500,
+        cursor: "pointer",
+        marginTop:"30px"
+      }}
     >
-      {children}
+      {label}
     </button>
   );
-};
+}
