@@ -7,7 +7,7 @@ interface Inputprops {
 
 export function Input({placeholder,value,onChange,type} : Inputprops){
   return(
-    <input  value={value}     // ✅ PASS VALUE
+    <input  value={value}
       onChange={onChange} placeholder={placeholder} type="text"style={{
       padding: "20px 12px",
     fontSize:"16px",
