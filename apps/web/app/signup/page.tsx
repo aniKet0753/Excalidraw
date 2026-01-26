@@ -25,6 +25,7 @@ export default  function signup() {
         email,
         password,
       });
+      localStorage.setItem("token", res.data.token);//we used data. to send token along with these packages data
       setsucess("Signup successful! You can now Signin.");
       setTimeout(() => {
         router.push('/signin');
@@ -32,7 +33,7 @@ export default  function signup() {
       setEmail("");// clear input fields
       setPassword("");// clear input fields
     } catch (err) {
-      seterror("Signup failed. Please try again.");
+      seterror("Signup failed. plase Check your details and try again.");
     }
   }
   return (
@@ -46,6 +47,7 @@ export default  function signup() {
               <br />
               <Input placeholder="Password" value={password} onChange={(e)=> setPassword(e.target.value)}/>
               <br />
+              {/* <p style={{color:"black"}}>You Already Have an Accpunt ?<u>SignIn</u></p> */}
               {success && (
                 <p style={{ color: "green", marginBottom: "8px" }}>{success}</p>)}
               {error && (
