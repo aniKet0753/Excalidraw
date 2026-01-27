@@ -41,13 +41,13 @@ export default  function signup() {
       <div>
         <main style={{  height: "700px", borderColor:"gray", borderRadius:"10px",width:"900px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#f3f4f6",}}>
           <div style={{ background: "#f3f4f6", fontFamily:"Roboto" }}>
-            <Card title="Signup page" />
+            <Card title="Signup page" /> 
             <div style={{ marginTop: "16px", textAlign: "center" }}>
               <Input  placeholder="Email" value={email} onChange={(e)=> setEmail(e.target.value)} />
               <br />
               <Input placeholder="Password" value={password} onChange={(e)=> setPassword(e.target.value)}/>
               <br />
-              {/* <p style={{color:"black"}}>You Already Have an Accpunt ?<u>SignIn</u></p> */}
+               <p style={{color:"black", fontSize:"20px",marginTop:"5px",fontFamily:"Roboto"}}>You Already Have an Account ?<u onClick={()=> router.push("/signin")} style={{color:"red",cursor:"pointer",}}> Sign In</u></p>
               {success && (
                 <p style={{ color: "green", marginBottom: "8px" }}>{success}</p>)}
               {error && (

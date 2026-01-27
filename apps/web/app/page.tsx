@@ -7,8 +7,6 @@ import { Butoom } from "@repo/ui/button";
 import { Navbar } from "@repo/ui/navbar";
 import {  useRouter } from "next/navigation";
 
-
-
 export default function Home() {
     const router = useRouter();
 
@@ -21,7 +19,6 @@ export default function Home() {
         <h1 style={{fontFamily:"Roboto"}}>WELCOME TO EXCALIDEAW</h1>
       </div>
       <div style={{backgroundColor:"red"}}>
-        tyjtjtjt
       </div>
     </div>
   </main>

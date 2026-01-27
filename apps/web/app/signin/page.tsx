@@ -19,7 +19,7 @@ export default function Signin() {
     setEmail("");
     setPassword("");
     if (!email || ! password) {
-      alert("please fill all fields");
+      setError("please fill all fields");
       return;
     }
   const res = axios.post("http://localhost:3001/api/signin", {
@@ -35,9 +35,9 @@ export default function Signin() {
       setEmail("");
       setPassword("");
     } else {
-      alert("Signin failed. Please try again.");
+      setError("Signin failed. Please try again.");
     } }).catch((error) => {
-      alert("Signin failed. Please try again.");
+      setError("Signin failed. Please try again.");
     });
     
   }
@@ -48,7 +48,7 @@ export default function Signin() {
         <main style={{  height: "700px", borderColor:"gray", borderRadius:"10px",width:"900px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#f3f4f6",}}>
           <div style={{ background: "#f3f4f6", fontFamily:"Roboto" }}>
             <Card title="SignIn Page" />
-            <div style={{ marginTop: "16px", textAlign: "center" }}>
+            <div style={{ marginTop: "1px", textAlign: "center" }}>
               <Input  placeholder="Email" value={email} onChange={(e)=> setEmail(e.target.value)} />
               <br />
               <Input placeholder="Password" value={password} onChange={(e)=> setPassword(e.target.value)}/>
