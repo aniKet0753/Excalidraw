@@ -28,12 +28,9 @@ export default function Signin() {
   });
   res.then((response) => {
     if (response.data.success) {
+      localStorage.setItem("isLoggedIn", "true");
       setSuccess("Signin successful! Redirecting to home page...");
-      setTimeout(() => {
-        router.push("/")
-      }, 3000);
-      setEmail("");
-      setPassword("");
+      router.push("/");
     } else {
       setError("Signin failed. Please try again.");
     } }).catch((error) => {
@@ -57,7 +54,7 @@ export default function Signin() {
                 <p style={{ color: "green", marginBottom: "8px" }}>{success}</p>)}
               {error && (
                 <p style={{ color: "red", marginBottom: "8px" }}>{error}</p>)}
-              <Butoom onClick={handleSignin}  label="SignIN" />
+              <Butoom onClick={handleSignin}  label="SignIn" />
             </div>
           </div>
         </main>

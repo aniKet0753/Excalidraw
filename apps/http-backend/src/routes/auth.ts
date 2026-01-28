@@ -45,7 +45,6 @@ const isMatch = await bcrypt.compare(
     const token = jwt.sign(
       { email },
       process.env.JWT_SECRET as string,
-      { expiresIn: "6h" }
     );
     
 

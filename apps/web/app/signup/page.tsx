@@ -25,7 +25,6 @@ export default  function signup() {
         email,
         password,
       });
-      localStorage.setItem("token", res.data.token);//we used data. to send token along with these packages data
       setsucess("Signup successful! You can now Signin.");
       setTimeout(() => {
         router.push('/signin');
