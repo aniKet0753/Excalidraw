@@ -12,7 +12,9 @@ router.post("/signup", async (req, res) => {
         const hash = await bcrypt.hash(password, 10);
            const { error } = await supabase
       .from("users")
-      .insert([{ email, password_hash: hash }]);
+      .insert([{ email, password_hash: hash }])
+       .select("id, email")
+       .single();
         if (error) {
       return res.status(400).json({ message: error.message });
     }
@@ -28,7 +30,7 @@ router.post("/signin", async (req,res)=>{
     const {email , password} = req.body;
   const { data: user, error } = await supabase
       .from("users")
-      .select("password_hash")
+      .select("id , password_hash")
       .eq("email", email)
       .single();    
       if (error || !user) {
@@ -39,12 +41,13 @@ const isMatch = await bcrypt.compare(
       user.password_hash
     );      
              if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "passeord is incorrect" });
     }
 
     const token = jwt.sign(
-      { email },
-      process.env.JWT_SECRET as string,
+      { userId: user.id, email : email },
+      process.env.JWT_SECRET || "",
+       { expiresIn: '7d' }
     );
     
 

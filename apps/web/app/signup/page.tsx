@@ -6,7 +6,7 @@ import axios from "axios";
 import { useState } from "react";
 import {useRouter} from "next/navigation";
 
-export default  function signup() {
+export default  function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [success, setsucess] = useState("");
@@ -14,8 +14,8 @@ export default  function signup() {
   const router = useRouter();
   
   async function handleSignup() {
-    setsucess("");
-    seterror("");
+    // setsucess("");
+    // seterror("");
     if(!email || !password){
       seterror("please fill all fields");
       return;
@@ -29,8 +29,8 @@ export default  function signup() {
       setTimeout(() => {
         router.push('/signin');
       },2000);
-      setEmail("");// clear input fields
-      setPassword("");// clear input fields
+      // setEmail("");// clear input fields
+      // setPassword("");// clear input fields
     } catch (err) {
       seterror("Signup failed. plase Check your details and try again.");
     }

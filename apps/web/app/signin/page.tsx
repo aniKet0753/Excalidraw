@@ -15,28 +15,38 @@ export default function Signin() {
   const router = useRouter();
 
 
-  function handleSignin() {
+  async function handleSignin() {
     setEmail("");
     setPassword("");
     if (!email || ! password) {
       setError("please fill all fields");
       return;
     }
-  const res = axios.post("http://localhost:3001/api/signin", {
-    email:email,
-    password:password,
-  });
-  res.then((response) => {
-    if (response.data.success) {
-      localStorage.setItem("isLoggedIn", "true");
-      setSuccess("Signin successful! Redirecting to home page...");
-      router.push("/");
-    } else {
-      setError("Signin failed. Please try again.");
-    } }).catch((error) => {
-      setError("Signin failed. Please try again.");
-    });
-    
+      try {
+      const res = await axios.post("http://localhost:3001/api/signin", {
+        email,
+        password,
+      });
+
+      if (res.data.success && res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        
+        setSuccess("Signin successful! Redirecting...");
+        
+        setEmail("");
+        setPassword("");
+        
+        setTimeout(() => {
+          router.push("/");
+        }, 1500);
+      } else {
+        setError("Signin failed. Please try again.");
+      }
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || "Signin failed. Please check your credentials.";
+      setError(errorMessage);
+    } finally {
+    }
   }
 
   return (

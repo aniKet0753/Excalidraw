@@ -1,25 +1,59 @@
 "use client";
 
-import { useState } from "react";
-import { Card } from "@repo/ui/card";
-import { Input } from "@repo/ui/input";
-import { Butoom } from "@repo/ui/button";
+import { useState, useEffect } from "react";
 import { Navbar } from "@repo/ui/navbar";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-    const router = useRouter();
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  return <main>
-    <div>
-      <Navbar onSignupClick={()=> router.push("/signup")}/>
-    </div>
-    <div style={{display:"flex", justifyContent:"space-between"}}>
-      <div style={{backgroundColor:"yellow"}}>
-        <h1 style={{fontFamily:"Roboto"}}>WELCOME TO EXCALIDEAW</h1>
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+    setLoading(false);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    router.push("/");
+  };
+
+  if (loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
+        <h2>Loading...</h2>
       </div>
-      <div style={{backgroundColor:"red"}}>
+    );
+  }
+  return (
+    <main>
+      <div>
+        <Navbar isLoggedIn={isLoggedIn} onSignupClick={() => router.push("/signup")} onSigninClick={() => router.push("/signin")} onLogoutClick={handleLogout}/>
       </div>
-    </div>
-  </main>
+      <div style={{ display: "flex", justifyContent: "space-between", padding: "20px" }}>
+        <div style={{ padding: "20px", borderRadius: "10px",textAlign:"center",}}>
+          <h1 style={{ fontFamily: "'Inter', system-ui, sans-serif",fontSize:"70px", marginTop:"50px",display:"flex",}}>
+            WELCOME TO <p style={{color:"#ff0000",marginLeft:"8px",textShadow: "0 0 6px rgba(255, 0, 0, 0.6), 0 0 14px rgba(255, 0, 0, 0.3)", borderColor:"black"}}>EXCALIDRAW</p>
+            {isLoggedIn && " You're logged in!"}
+          </h1>
+          {!isLoggedIn && (
+            <p style={{fontFamily:"Roboto", fontSize:"30px"}}>Please sign up or sign in to get started.</p>
+          )}
+          <div style={{ marginLeft:"110px", width: "700px",position: "relative",borderRadius: "15px",overflow: "hidden",boxShadow: "0   rgba(0,0,0,0.2)", marginTop:'50px', marginRight:"20px"}}>
+          <video autoPlay loop muted playsInline style={{width: "100%",height: "100%", objectFit: "cover",display: "block", }} >
+            <source src="/excalidraw_short.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+         </div>
+        </div>
+        <div style={{ width: "600px",height:"700px",position: "relative",borderRadius: "15px",overflow: "hidden",boxShadow: "0   rgba(0,0,0,0.2)", marginTop:'50px', marginRight:"20px", backgroundColor:"pink"}}>
+          Hi there
+        </div>
+          
+      </div>
+    </main>
+  );
 }
