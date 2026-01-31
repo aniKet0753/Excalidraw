@@ -9,6 +9,7 @@ import {useRouter} from "next/navigation";
 export default  function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setname] = useState("");
   const [success, setsucess] = useState("");
   const [error, seterror] = useState("");
   const router = useRouter();
@@ -41,7 +42,8 @@ export default  function Signup() {
         <main style={{  height: "700px", borderColor:"gray", borderRadius:"10px",width:"900px", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#f3f4f6",}}>
           <div style={{ background: "#f3f4f6", fontFamily:"Roboto" }}>
             <Card title="Signup page" /> 
-            <div style={{ marginTop: "16px", textAlign: "center" }}>
+            <div style={{ margin:"0px", textAlign: "center" }}>
+              <Input placeholder="User Name" value={name} onChange={(e)=> setname(e.target.value)}/>
               <Input  placeholder="Email" value={email} onChange={(e)=> setEmail(e.target.value)} />
               <br />
               <Input placeholder="Password" value={password} onChange={(e)=> setPassword(e.target.value)}/>
