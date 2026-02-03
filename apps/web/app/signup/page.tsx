@@ -22,9 +22,10 @@ export default  function Signup() {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:3001/api/signup", {
+       await axios.post("http://localhost:3001/api/signup", {
         email,
         password,
+        name,
       });
       setsucess("Signup successful! You can now Signin.");
       setTimeout(() => {

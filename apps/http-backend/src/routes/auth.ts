@@ -8,13 +8,12 @@ const router: ExpressRouter = Router();
 router.post("/signup", async (req, res) => {
   try{
         
-    const { email  , password } = req.body;
+    const { email  , password,name } = req.body;
         const hash = await bcrypt.hash(password, 10);
            const { error } = await supabase
-      .from("users")
-      .insert([{ email, password_hash: hash }])
-       .select("id, email")
-       .single();
+      .from("User")
+      .insert([{ email, password: hash ,name}])
+       
         if (error) {
       return res.status(400).json({ message: error.message });
     }
@@ -29,8 +28,8 @@ router.post("/signin", async (req,res)=>{
   try {
     const {email , password} = req.body;
   const { data: user, error } = await supabase
-      .from("users")
-      .select("id , password_hash")
+      .from("User")
+      .select("id , password")
       .eq("email", email)
       .single();    
       if (error || !user) {
@@ -38,7 +37,7 @@ router.post("/signin", async (req,res)=>{
 }
 const isMatch = await bcrypt.compare(
       password,
-      user.password_hash
+      user.password
     );      
              if (!isMatch) {
       return res.status(401).json({ message: "passeord is incorrect" });
