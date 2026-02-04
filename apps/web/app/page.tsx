@@ -31,7 +31,7 @@ export default function Home() {
     );
   }
   return (
-    <main>
+    <main style={{ backgroundColor:"#667eea", }}>
       <div>
         <Navbar isLoggedIn={isLoggedIn} onSignupClick={() => router.push("/signup")} onSigninClick={() => router.push("/signin")} onLogoutClick={handleLogout}/>
       </div>
