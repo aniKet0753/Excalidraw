@@ -4,11 +4,12 @@ import jwt from "jsonwebtoken";
 const ws = new WebSocketServer({ port :8080});
 
 ws.on("connection",function connection(ws, request){
+  try{
   const url = request.url;
   const queryParams = new URLSearchParams(url?.split('?')[1]);
   const token = queryParams.get("token") || "";
   const decode = jwt.verify(token, process.env.JWT_SECRET ||"");
-  if ( typeof decode == "string") {
+  if ( typeof decode == "string") { 
     ws.close();
     return;
   }
@@ -19,4 +20,7 @@ ws.on("connection",function connection(ws, request){
   ws.on('message',function message(data){
    ws.send("hellow from server");
   });
+  }catch(err){
+    ws.close();
+  }
 })

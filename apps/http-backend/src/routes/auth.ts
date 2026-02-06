@@ -2,6 +2,7 @@ import { Router, type Router as ExpressRouter } from "express";
 import  {supabase}   from "../supabase";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { middleware } from "./middleware";
 
 const router: ExpressRouter = Router();
 
@@ -53,6 +54,7 @@ const isMatch = await bcrypt.compare(
     return res.status(200).json({
       success: true,
       token,
+      userId: user.id,
       message: "Signin successful",
     });
 
@@ -63,5 +65,38 @@ const isMatch = await bcrypt.compare(
   }
 })
 
+function generateRoomId(): string {
+  return Math.random().toString(36).substring(2, 10);
+}
+
+router.post("/room",middleware, async (req, res) => {
+const { name } = req.body || {};  
+const userId = req.userId;
+  if (!name) {
+    return res.status(400).json({ message: "room name required" });
+  }
+
+  const roomId = generateRoomId();
+
+  const { data, error } = await supabase
+    .from("Room")
+    .insert({
+      adminId: userId,
+      slug: roomId
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("SUPABASE ERROR ", error);
+    return res.status(500).json({
+      message: "Room creation failed",
+      error: error.message
+    });
+  }
+  res.json({
+    roomId: data.slug
+  });
+});
 
 export default router;
