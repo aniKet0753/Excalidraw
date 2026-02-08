@@ -5,6 +5,7 @@ dotenv.config({
 });
 import { WebSocketServer,WebSocket } from "ws";
 import jwt from "jsonwebtoken";
+import { supabase } from "./wsSupabase";
 
 const ws = new WebSocketServer({ port :8080});
 
@@ -48,36 +49,64 @@ ws.on("connection",function connection(ws, request){
     ws
   })
   
-  ws.on('message',function message(data){
+  ws.on('message',async function message(data){
    const parsesata = JSON.parse(data.toString());
 
-   if(parsesata.type == "join_room") {
+   if(parsesata.type == "join_room") {//join checked
     const user = users.find(u => u.ws == ws);
     user?.room.push(parsesata.roomId);
    }
    if(parsesata.type == "leave_room") {
     const user = users.find(u=> u.ws == ws);
     if(!user) {
-      return;
-    
+      return null;
     }
-    user.room = user?.room.filter(r => r === parsesata.room);
+    user.room = user?.room.filter(r => r !== parsesata.roomId);
    }
-   if(parsesata.type == "send_message") {
-    const roomId = parsesata.roomId;
+   if(parsesata.type == "send_message") {//send checked not fix , its getting it own message once on send message it shouild 
+    //send not other not broadcast to its own 
+    const roomSlug = parsesata.roomId;
     const message = parsesata.message;
 
+
+    //chatgpt help 
+    // 1️⃣ Find Room.id using slug
+  const { data: room, error: roomError } = await supabase
+    .from("Room")
+    .select("id")
+    .eq("slug", roomSlug)
+    .single();
+
+  if (roomError || !room) {
+    console.error("ROOM NOT FOUND", roomError);
+    return;
+  }
+
+  const roomId = room.id; // ✅ INTEGER
+
     users.forEach(u=> {
-      if(u.room.includes(parsesata.roomId)){
+      if(u.room.includes(roomSlug)){
         u.ws.send(JSON.stringify({
           type : "send_message",
-          roomId : parsesata.roomId,
-          message:parsesata.message,
+          roomId : roomSlug,
+          message: message,
         }))
       }
     })
+    const {  error } = await supabase.from ("Chat").insert({
+      roomId : roomId,
+      userId : userId,
+      message : message
+    }).select().single();
+    if(error){
+      console.error("SUPABASE ERROR ", error);
+     return;
+    }
    }
-  });
+   
+   //database connection and save message to database
+   });
+   
   }catch(err){
     ws.close(1011, "Server error");
   }
