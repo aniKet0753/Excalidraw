@@ -70,7 +70,7 @@ ws.on("connection",function connection(ws, request){
 
 
     //chatgpt help 
-    // 1️⃣ Find Room.id using slug
+    //  Find Room.id using slug
   const { data: room, error: roomError } = await supabase
     .from("Room")
     .select("id")
@@ -82,7 +82,7 @@ ws.on("connection",function connection(ws, request){
     return;
   }
 
-  const roomId = room.id; // ✅ INTEGER
+  const roomId = room.id; //  INTEGER
 
     users.forEach(u=> {
       if(u.room.includes(roomSlug)){
@@ -93,6 +93,7 @@ ws.on("connection",function connection(ws, request){
         }))
       }
     })
+      //database connection and save message to database
     const {  error } = await supabase.from ("Chat").insert({
       roomId : roomId,
       userId : userId,
@@ -103,8 +104,7 @@ ws.on("connection",function connection(ws, request){
      return;
     }
    }
-   
-   //database connection and save message to database
+
    });
    
   }catch(err){

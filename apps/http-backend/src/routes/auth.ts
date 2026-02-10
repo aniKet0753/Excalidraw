@@ -65,8 +65,8 @@ const isMatch = await bcrypt.compare(
   }
 })
 
-function generateRoomId(): string {
-  return Math.random().toString(36).substring(2, 10);
+function generateRoomId(): Number {
+  return Math.floor(100000 + Math.random() * 900000);
 }
 
 router.post("/room",middleware, async (req, res) => {
@@ -98,5 +98,28 @@ const userId = req.userId;
     roomId: data.slug
   });
 });
+
+//fixing part is to handle roomId ,as of fnow it is taking interger id of room fro room table
+router.get("/chat/room/:roomId", middleware, async (req, res) => {  
+const roomId = Number(req.params.roomId);
+console.log("ROOM ID:", roomId, typeof roomId);
+
+  const { data: messages, error } = await supabase
+    .from("Chat")
+    .select("*")
+    .eq("roomId", roomId)
+    .order("id", { ascending: false })
+    .limit(50);
+
+  if (error) {
+    return res.status(500).json({
+      message: "Failed to fetch messages",
+      error: error.message
+    });
+  }
+
+  return res.status(200).json({ messages });
+});
+
 
 export default router;
