@@ -100,15 +100,30 @@ const userId = req.userId;
 });
 
 //fixing part is to handle roomId ,as of fnow it is taking interger id of room fro room table
-router.get("/chat/room/:roomId", middleware, async (req, res) => {  
-const roomId = Number(req.params.roomId);
-console.log("ROOM ID:", roomId, typeof roomId);
+router.get("/chat/room/:slug", middleware, async (req, res) => {  
+  const { slug } = req.params;
+
+  // 1️⃣ Get room id from slug
+  const { data: room, error: roomError } = await supabase
+    .from("Room")
+    .select("id")
+    .eq("slug", slug)
+    .single();
+
+  if (roomError || !room) {
+    return res.status(404).json({ message: "Room not found" });
+  }
 
   const { data: messages, error } = await supabase
     .from("Chat")
-    .select("*")
-    .eq("roomId", roomId)
-    .order("id", { ascending: false })
+    .select(`
+      id,
+      message,
+      userId,
+      roomId
+    `)
+    .eq("roomId", room.id)
+    .order("id", { ascending: true })
     .limit(50);
 
   if (error) {
