@@ -15,10 +15,10 @@ export function Navbar({
   onLogoutClick 
 }: NavbarProps) {
   return (
-    <div style={{ padding: "12px 24px", display: "flex", justifyContent: "space-between", alignItems: "center",  borderRadius: "12px", background: "rgba(255, 255, 255, 0.25)", backdropFilter: "blur(12px)",  WebkitBackdropFilter: "blur(12px)",  border: "1px solid rgba(255,255,255,0.3)", boxShadow: "0 8px 32px rgba(0,0,0,0.1)", position: "sticky",  top: "10px",  margin: "10px" 
+    <div style={{ padding: "12px 24px", display: "flex", justifyContent: "space-between", alignItems: "center",  borderRadius: "12px", background: "rgba(255, 255, 255, 0.75) ", backdropFilter: "blur(12px)",  WebkitBackdropFilter: "blur(12px)",  border: "1px solid rgba(0, 0, 0, 0.06)", boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)", position: "sticky",  top: "10px",  margin: "10px" 
     }}>
       <img src="https://www.pngmart.com/files/4/Philadelphia-Eagles-PNG-Pic.png" alt="Logo"style={{ height: "62px", width: "62px", marginLeft: "10px" }} />
-      <h2 style={{ margin: 0 }}>About This Website</h2>
+      <h2 style={{ margin: 0, color:"black" }}>About This Website</h2>
       <div style={{ display: "flex", gap: "10px" }}>
         {isLoggedIn ? (
           <div 
