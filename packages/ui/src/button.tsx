@@ -1,6 +1,7 @@
 interface Butoonprops {
   label: string;
     onClick?: () => void;
+    
 }
 
 export function Butoom({ label , onClick}: Butoonprops) {
@@ -8,10 +9,10 @@ export function Butoom({ label , onClick}: Butoonprops) {
     <button
     onClick={onClick}
       style={{
-
+        fontFamily:"Roboto",
         height:"50px",
         width:"200px",
-        backgroundColor: "#2563eb",
+        backgroundColor: "#006aff",
         color: "#ffffff",
         border: "none",
         borderRadius: "6px",
@@ -19,7 +20,8 @@ export function Butoom({ label , onClick}: Butoonprops) {
         fontSize: "20px",
         fontWeight: 500,
         cursor: "pointer",
-        marginTop:"30px"
+        marginTop:"30px",
+        borderColor:"black",
       }}
     >
       {label}
