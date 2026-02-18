@@ -18,10 +18,19 @@ export default function Home() {
     setLoading(false);
   }, []);
   function community () {
-
+    router.push("https://chat.whatsapp.com/EWgILNn87cnFIRCRxLC7BF")
   }
- function startdrwing () {
 
+  function demovideo () {
+    router.push("https://youtube.com/shorts/P9qTXsMcaM0?si=8jFMgEz8S0K5kUBV");
+  }
+
+ function startdrwing () {
+  if(isLoggedIn){
+    router.push("/room");
+  }else{
+    router.push("/signup")
+  }
  }
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -47,15 +56,15 @@ export default function Home() {
           <h1 style={{ fontFamily: "'Inter', system-ui, sans-serif",fontSize: "clamp(48px, 6vw, 70px)",fontWeight: 800,lineHeight: 1.1, marginTop: "120px",color: "white", maxWidth: "800px",}}>
             Your{" "}<span style={{color:"#f2ff00",marginLeft:"8px",textShadow: `0 0 4px rgba(255, 242, 0, 0.9), 0 0 12px rgba(255, 251, 0, 0.7), 0 0 28px rgba(255, 251, 0, 0.4), 0 0 50px rgba(255,0,0,0.2)`, borderColor:"black"}}>Ideas</span>
             {" "}Sketched to <br /> <span style={{}}>Life</span>
-            {isLoggedIn && " You're logged in!"}
+            
           </h1>
-          {!isLoggedIn && (
+          
             <p style={{fontFamily:"Roboto", fontSize:"28px", marginTop:"20px"}}>A virtual whiteboard for sketching hand-drawn like diagrams.<br />
              Collaborate in real-time, export your work, and bring your ideas to<br /> life.</p>
-          )}
+          
           <div style={{gap:"19px", display:"flex",padding:"20px"}}>
           <Butoom  label="Start Drawing Free" onClick={startdrwing} />
-          <Butoom label="Watch Demo" />
+          <Butoom label="Watch Demo" onClick={demovideo} />
           </div>
 
 
@@ -138,9 +147,9 @@ export default function Home() {
     Ready to Start Drawing?
   </h2>
   <p style={{ fontFamily:"Roboto",fontSize: "20px", color: "rgba(255,255,255,0.9)", maxWidth: "720px",marginBottom: "40px", lineHeight: "1.6",}}>
-    Join thousands of creators, designers, and teams using Excalidraw
+    “Join a growing community of creators, designers, and teams.”
   </p>
-  <button onClick={community} style={{backgroundColor: "#ffffff", color: "#667eea",padding: "16px 36px", fontSize: "18px",fontWeight: "600", borderRadius: "12px", border: "none",cursor: "pointer",transition: "all 0.3s ease",boxShadow: "0 12px 30px rgba(0,0,0,0.25)", }}
+  <button  onClick={community} style={{backgroundColor: "#ffffff", color: "#667eea",padding: "16px 36px", fontSize: "18px",fontWeight: "600", borderRadius: "12px", border: "none",cursor: "pointer",transition: "all 0.3s ease",boxShadow: "0 12px 30px rgba(0,0,0,0.25)", }}
     onMouseEnter={(e) => {
       e.currentTarget.style.transform = "translateY(-3px)";
       e.currentTarget.style.boxShadow = "0 20px 45px rgba(0,0,0,0.35)";

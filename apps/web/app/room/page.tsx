@@ -1,0 +1,25 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function Room() {
+
+  return (
+    <main
+      style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#667eea"}}>
+      <div style={{ width: "320px" }}>
+        <h2 style={{fontFamily:"Roboto", fontSize: "22px", fontWeight: 600, marginBottom: "20px", textAlign: "center", }}>
+          Join or Create a Room
+        </h2>
+        <input placeholder="Room ID"style={{ width: "100%",  height: "42px",  padding: "0 12px",  borderRadius: "8px", border: "1px solid #ddd", marginBottom: "12px", fontSize: "14px",  }} />
+        <button  style={{ fontFamily:"Roboto", width: "100%", height: "42px", background: "#1f6fff", color: "#fff", border: "none", borderRadius: "8px" ,fontSize: "14px", fontWeight: 500, cursor: "pointer", marginBottom: "10px", }} >
+          Join Room
+        </button>
+        <button style={{ fontFamily:"Roboto", width: "100%", height: "42px", background: "transparent", color: "#ffffff", border: "1px solid #ffffff", borderRadius: "8px", fontSize: "14px", fontWeight: 500, cursor: "pointer",}}>
+          Create New Room
+        </button>
+      </div>
+    </main>
+  );
+}
