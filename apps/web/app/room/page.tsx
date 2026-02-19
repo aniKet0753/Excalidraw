@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Room() {
+  const [roomId, setroomId] = useState("")
+  const router = useRouter();
 
   return (
     <main
@@ -12,8 +14,12 @@ export default function Room() {
         <h2 style={{fontFamily:"Roboto", fontSize: "22px", fontWeight: 600, marginBottom: "20px", textAlign: "center", }}>
           Join or Create a Room
         </h2>
-        <input placeholder="Room ID"style={{ width: "100%",  height: "42px",  padding: "0 12px",  borderRadius: "8px", border: "1px solid #ddd", marginBottom: "12px", fontSize: "14px",  }} />
-        <button  style={{ fontFamily:"Roboto", width: "100%", height: "42px", background: "#1f6fff", color: "#fff", border: "none", borderRadius: "8px" ,fontSize: "14px", fontWeight: 500, cursor: "pointer", marginBottom: "10px", }} >
+        <input value={roomId} onChange={(e) =>{
+          setroomId(e.target.value)
+        }} type="text"  placeholder="Room ID"style={{ width: "100%",  height: "42px",  padding: "0 12px",  borderRadius: "8px", border: "1px solid #ddd", marginBottom: "12px", fontSize: "14px",  }} />
+        <button onClick={()=>{
+          router.push(`/room/${roomId}`)
+        }}  style={{ fontFamily:"Roboto", width: "100%", height: "42px", background: "#1f6fff", color: "#fff", border: "none", borderRadius: "8px" ,fontSize: "14px", fontWeight: 500, cursor: "pointer", marginBottom: "10px", }} >
           Join Room
         </button>
         <button style={{ fontFamily:"Roboto", width: "100%", height: "42px", background: "transparent", color: "#ffffff", border: "1px solid #ffffff", borderRadius: "8px", fontSize: "14px", fontWeight: 500, cursor: "pointer",}}>
