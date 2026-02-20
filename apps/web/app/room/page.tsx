@@ -10,7 +10,7 @@ export default function Room() {
   return (
     <main
       style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#667eea"}}>
-      <div style={{ width: "320px" }}>
+      <div style={{ width: "320px"  }}>
         <h2 style={{fontFamily:"Roboto", fontSize: "22px", fontWeight: 600, marginBottom: "20px", textAlign: "center", }}>
           Join or Create a Room
         </h2>
