@@ -100,7 +100,7 @@ const userId = req.userId;
 });
 
 //fixing part is to handle roomId ,as of fnow it is taking interger id of room fro room table
-router.get("/chat/room/:slug", middleware, async (req, res) => {  
+router.get("/chat/room/:slug", middleware, async (req, res) => {
   const { slug } = req.params;
 
   // 1️⃣ Get room id from slug
@@ -133,7 +133,9 @@ router.get("/chat/room/:slug", middleware, async (req, res) => {
     });
   }
 
-  return res.status(200).json({ messages });
+  return res.status(200).json({
+    roomId:slug,
+    messages });
 });
 
 
