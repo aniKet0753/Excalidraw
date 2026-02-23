@@ -125,7 +125,7 @@ router.get("/chat/room/:slug", middleware, async (req, res) => {
     .eq("roomId", room.id)
     .order("id", { ascending: true })
     .limit(50);
-
+    
   if (error) {
     return res.status(500).json({
       message: "Failed to fetch messages",

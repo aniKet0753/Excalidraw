@@ -85,9 +85,9 @@ ws.on("connection",function connection(ws, request){
   const roomId = room.id; //  INTEGER
 
     users.forEach(u=> {
-      if(u.room.includes(roomSlug)){
+      if(u.room.includes(roomSlug) && u.ws !== ws){
         u.ws.send(JSON.stringify({
-          type : "send_message",
+          type : "new_message",
           roomId : roomSlug,
           message: message,
         }))
