@@ -27,13 +27,15 @@ export default  function Signup() {
         password,
         name,
       });
+       console.log("signnup first")
       setsucess("Signup successful! You can now Signin.");
       setTimeout(() => {
         router.push('/signin');
       },2000);
       // setEmail("");// clear input fields
       // setPassword("");// clear input fields
-    } catch (err) {
+    } catch (error: any) {
+      console.log(error);
       seterror("Signup failed. plase Check your details and try again.");
     }
   }

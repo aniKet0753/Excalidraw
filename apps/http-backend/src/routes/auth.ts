@@ -7,13 +7,14 @@ import { middleware } from "./middleware";
 const router: ExpressRouter = Router();
 
 router.post("/signup", async (req, res) => {
-  try{
-        
+  try{   
     const { email  , password,name } = req.body;
         const hash = await bcrypt.hash(password, 10);
-           const { error } = await supabase
-      .from("User")
+           const { data, error } = await supabase
+      .from("users")
       .insert([{ email, password: hash ,name}])
+      .single();
+      console.log("Supabase error:", error);
        
         if (error) {
       return res.status(400).json({ message: error.message });
@@ -29,7 +30,7 @@ router.post("/signin", async (req,res)=>{
   try {
     const {email , password} = req.body;
   const { data: user, error } = await supabase
-      .from("User")
+      .from("users")
       .select("id , password")
       .eq("email", email)
       .single();    
