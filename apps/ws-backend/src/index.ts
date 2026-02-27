@@ -51,21 +51,22 @@ ws.on("connection",function connection(ws, request){
   
   ws.on('message',async function message(data){
    const parsesata = JSON.parse(data.toString());
+   console.log("Received data ", parsesata);
 
    if(parsesata.type == "join_room") {//join checked
     const user = users.find(u => u.ws == ws);
-    user?.room.push(parsesata.roomId);
+    user?.room.push(parsesata.roomSlug);
    }
    if(parsesata.type == "leave_room") {
     const user = users.find(u=> u.ws == ws);
     if(!user) {
       return null;
     }
-    user.room = user?.room.filter(r => r !== parsesata.roomId);
+    user.room = user?.room.filter(r => r !== parsesata.roomSlug);
    }
    if(parsesata.type == "send_message") {//send checked not fix , its getting it own message once on send message it shouild 
     //send not other not broadcast to its own 
-    const roomSlug = parsesata.roomId;//you hve to pass roomId inorder to send meggase
+    const roomSlug = parsesata.roomSlug;//you hve to pass roomId inorder to send meggase
     const message = parsesata.message;
 
 
@@ -74,31 +75,31 @@ ws.on("connection",function connection(ws, request){
   const { data: room, error: roomError } = await supabase
     .from("Room")
     .select("id")
-    .eq("slug", roomSlug)
-    .single();
+    .eq("slug",roomSlug)
+    .maybeSingle();
 
   if (roomError || !room) {
     console.error("ROOM NOT FOUND", roomError);
     return;
   }
 
-  const roomId = room.id; //  INTEGER
+  const roomId = room.id; //  string
 
-    users.forEach(u=> {
-      if(u.room.includes(roomSlug) && u.ws !== ws){
-        u.ws.send(JSON.stringify({
-          type : "new_message",
-          roomId : roomSlug,
-          message: message,
-        }))
-      }
-    })
+users.forEach(u => {//broadcast to all user in that room except sender
+  if (u.ws !== ws && u.room.includes(roomSlug)) {
+    u.ws.send(JSON.stringify({
+      type: "new_message",
+      roomSlug,
+      message
+    }));
+  }
+});
       //database connection and save message to database
     const {  error } = await supabase.from ("Chat").insert({
       roomId : roomId,
       userId : userId,
       message : message
-    }).select().single();
+    });
     if(error){
       console.error("SUPABASE ERROR ", error);
      return;

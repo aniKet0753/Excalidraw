@@ -66,8 +66,8 @@ const isMatch = await bcrypt.compare(
   }
 })
 
-function generateRoomId(): Number {
-  return Math.floor(100000 + Math.random() * 900000);
+function generateRoomId(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
 router.post("/room",middleware, async (req, res) => {
@@ -135,7 +135,7 @@ router.get("/chat/room/:slug", middleware, async (req, res) => {
   }
 
   return res.status(200).json({
-    roomId:slug,
+    roomId: slug,
     messages });
 });
 
