@@ -5,6 +5,7 @@ import { Butoom } from "@repo/ui/button"
 import axios from "axios";
 import { BACKENDURL } from "../config";
 import { usesocket } from "../../../hook/usesocket"
+import CanvasBoard from "./canvasboard";
 
 interface ChatMessage {
   id: number;
@@ -77,6 +78,7 @@ setMessages(prev => [
 
   return <div>
     <div>
+      <CanvasBoard></CanvasBoard>
 {messages.map(msg => (
   <div key={msg.id}>
     {msg.message}
