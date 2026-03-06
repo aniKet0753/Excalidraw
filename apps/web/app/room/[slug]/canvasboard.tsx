@@ -5,11 +5,10 @@ import { useEffect, useRef, useState } from "react"
 
 
 export default function CanvasBoard() {
-    const [rectangle, setrectangle]=useState(null)
-    const [circle, setcircle]=useState(null)
+    const [tool,settool ]= useState("rectangle")
     const canvasref = useRef<HTMLCanvasElement>(null)
 
-//reactangle useeffect
+  //reactangle useeffect
   useEffect(() => {
     if(canvasref.current) {
       const canvas = canvasref.current
@@ -20,31 +19,59 @@ export default function CanvasBoard() {
 
       canvas.addEventListener("mousedown", (e)=>{
           click = true;
-          startx = e.clientX;
-          starty = e.clientY;
-
+          const rect = canvas.getBoundingClientRect()
+          startx = e.clientX - rect.left
+          starty = e.clientY - rect.top
       })
       canvas.addEventListener("mouseup", (e)=>{
-          click = false;
-        
+          click = false; 
       })
       canvas.addEventListener("mousemove", (e)=>{
+      const rect = canvas.getBoundingClientRect()
+
+      const mouseX = e.clientX - rect.left
+      const mouseY = e.clientY - rect.top
+        if(tool ==="rectangle") {
         if(click && ctx) {
-            const width = e.clientX - startx;
-            const height = e.clientY - starty;
+            const width = mouseX - startx;
+            const height = mouseY - starty;
             ctx.clearRect(0,0,canvas.width, canvas.height)
-            ctx.strokeRect(startx, starty, width, height)
-            
+            ctx.strokeRect(startx, starty, width, height) 
+        }
+      }
+        if(tool === "circle"){
+          if (click && ctx ) {
+            const width = mouseX - startx;
+            const height = mouseY - starty;
+            const radius = Math.sqrt(width * width + height * height)
+            ctx.clearRect(0,0,canvas.width,canvas.height)
+            ctx.beginPath()
+            ctx.arc(startx, starty, radius, 0, Math.PI * 2)
+            ctx.stroke()
+          }
+        }
+        if(tool ==="arrow") {
+          if(click && ctx ) {
+            ctx.clearRect(0,0,canvas.width, canvas.height)
+            ctx.beginPath()
+            ctx.moveTo(startx, starty)
+            ctx.lineTo(mouseX, mouseY)
+            ctx.stroke()
+          }
         }
         
       })
-
     }
-  }, [canvasref]);
-//circle useeffect
+  }, [tool]);
+ 
 
+//circle useeffect
   return (
-    <div style={{backgroundColor:"blue"}}>
+    <div style={{backgroundColor:"blue", display:"flex"}}>
+      <button onClick={()=>{ settool("rectangle") }} >rectangle</button>
+      <button onClick={()=>{ settool("circle")}} >circle</button>
+      <button onClick={()=>{  settool("arrow") }} >arrow</button>
+      <button onClick={()=> { settool("draw")}} >Draw</button>
       <canvas style={{backgroundColor:"white", color:"white"}} ref={canvasref} height={1000} width={1500}></canvas>
     </div>
   )
