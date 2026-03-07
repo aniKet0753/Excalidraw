@@ -10,6 +10,7 @@ export default function CanvasBoard() {
 
   //reactangle useeffect
   useEffect(() => {
+    let snapshot: ImageData | null = null
     if(canvasref.current) {
       const canvas = canvasref.current
       const ctx= canvas.getContext("2d")
@@ -19,9 +20,14 @@ export default function CanvasBoard() {
 
       canvas.addEventListener("mousedown", (e)=>{
           click = true;
+          snapshot = ctx?.getImageData(0,0,canvas.width,canvas.height) || null
           const rect = canvas.getBoundingClientRect()
           startx = e.clientX - rect.left
           starty = e.clientY - rect.top
+            if(tool === "draw" && ctx){
+            ctx.beginPath() 
+            ctx.moveTo(startx, starty)
+          }
       })
       canvas.addEventListener("mouseup", (e)=>{
           click = false; 
@@ -35,8 +41,8 @@ export default function CanvasBoard() {
         if(click && ctx) {
             const width = mouseX - startx;
             const height = mouseY - starty;
-            ctx.clearRect(0,0,canvas.width, canvas.height)
-            ctx.strokeRect(startx, starty, width, height) 
+        if(snapshot){ ctx.putImageData(snapshot,0,0) }
+          ctx.strokeRect(startx, starty, width, height) 
         }
       }
         if(tool === "circle"){
@@ -44,7 +50,9 @@ export default function CanvasBoard() {
             const width = mouseX - startx;
             const height = mouseY - starty;
             const radius = Math.sqrt(width * width + height * height)
-            ctx.clearRect(0,0,canvas.width,canvas.height)
+         if(snapshot){
+           ctx.putImageData(snapshot,0,0)
+           }            
             ctx.beginPath()
             ctx.arc(startx, starty, radius, 0, Math.PI * 2)
             ctx.stroke()
@@ -52,14 +60,27 @@ export default function CanvasBoard() {
         }
         if(tool ==="arrow") {
           if(click && ctx ) {
-            ctx.clearRect(0,0,canvas.width, canvas.height)
+        if(snapshot){
+            ctx.putImageData(snapshot,0,0)
+          }
             ctx.beginPath()
             ctx.moveTo(startx, starty)
             ctx.lineTo(mouseX, mouseY)
             ctx.stroke()
           }
         }
-        
+        if(tool === "draw"){
+          if(ctx && click) {
+             ctx.lineWidth = 2
+             ctx.strokeStyle = "black"
+
+            ctx.lineTo(mouseX, mouseY)
+          if(snapshot){
+            ctx.putImageData(snapshot,0,0)
+             }
+             ctx.stroke()
+          }
+        } 
       })
     }
   }, [tool]);
