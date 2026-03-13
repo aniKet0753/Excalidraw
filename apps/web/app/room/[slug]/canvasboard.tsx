@@ -2,17 +2,19 @@
 import { Butoom } from "@repo/ui/button"
 import { redirect } from "next/dist/server/api-utils"
 import { useEffect, useRef, useState } from "react"
+import { usesocket } from "../../../hook/usesocket"
 
 
-export default function CanvasBoard() {
+export default function CanvasBoard({roomId,socket}:{roomId : string, socket: WebSocket | null}) {
     const [tool,settool ]= useState("rectangle")
     const canvasref = useRef<HTMLCanvasElement>(null)
 
 
  //reactangle useeffect
+ //canvas useeffect
 useEffect(() => {
   if (!canvasref.current) return
-
+  
   const canvas = canvasref.current
   const ctx = canvas.getContext("2d")//drawing engine.
 
@@ -33,8 +35,50 @@ useEffect(() => {
     }
   }
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: MouseEvent) => {
     click = false
+        const rect = canvas.getBoundingClientRect()
+     const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+      const width = mouseX - startx
+      const height = mouseY - starty
+    
+    if(socket && tool === "rectangle"){
+    socket.send(JSON.stringify({
+      type:"rectangle",
+      roomId,
+      startx,
+      starty,
+      width,
+      height
+    }))
+  }
+
+        if(socket && tool === "circle"){
+        socket.send(JSON.stringify({
+          type:"circle",
+          roomId,
+          startx,
+          starty,
+          width,
+          height
+        }))
+      }
+
+            if(socket && tool === "arrow"){
+        socket.send(JSON.stringify({
+          type:"arrow",
+          roomId,
+          startx,
+          starty,
+          mouseX,
+          mouseY
+        }))
+      }
+
+      //sending data through socket in the backend with type "draw"
+
+
   }
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -71,7 +115,7 @@ useEffect(() => {
       ctx.beginPath()
       ctx.moveTo(startx, starty)
       ctx.lineTo(mouseX, mouseY)
-      ctx.stroke()
+      ctx.stroke()  
     }
 
     if (tool === "draw" && click) {
@@ -84,6 +128,16 @@ useEffect(() => {
       ctx.lineTo(mouseX, mouseY)
       ctx.stroke()
 
+  if(socket){
+    socket.send(JSON.stringify({
+      type:"draw",
+      roomId,
+      startx,
+      starty,
+      mouseX,
+      mouseY
+    }))
+  }
       startx = mouseX
       starty = mouseY
     }
@@ -98,8 +152,59 @@ useEffect(() => {
     canvas.removeEventListener("mouseup", handleMouseUp)
     canvas.removeEventListener("mousemove", handleMouseMove)
   }
-}, [tool])
+}, [tool,roomId])
  
+useEffect(() => {
+  if (!socket || !canvasref.current) return
+
+  const canvas = canvasref.current
+  const ctx = canvas.getContext("2d")
+
+  const handler = (event: MessageEvent) => {
+    const data = JSON.parse(event.data)
+    if (
+  data.type !== "draw" &&
+  data.type !== "rectangle" &&
+  data.type !== "circle" &&
+  data.type !== "arrow"
+) return
+
+    if (!ctx) return
+
+    if (data.type === "draw") {
+      ctx.beginPath()
+      ctx.moveTo(data.startx, data.starty)
+      ctx.lineTo(data.mouseX, data.mouseY)
+      ctx.stroke()
+    }
+
+    if (data.type === "rectangle") {
+      ctx.strokeRect(data.startx, data.starty, data.width, data.height)
+    }
+
+    if (data.type === "circle") {
+      const radius = Math.sqrt(data.width * data.width + data.height * data.height)
+      ctx.beginPath()
+      ctx.arc(data.startx, data.starty, radius, 0, Math.PI * 2)
+      ctx.stroke()
+    }
+
+    if (data.type === "arrow") {
+      ctx.beginPath()
+      ctx.moveTo(data.startx, data.starty)
+      ctx.lineTo(data.mouseX, data.mouseY)
+      ctx.stroke()
+    }
+  }
+
+  socket.addEventListener("message", handler)
+
+  return () => socket.removeEventListener("message", handler)
+
+}, [socket])
+
+
+
 //circle useeffect
   return (
     <div style={{backgroundColor:"black",}}>

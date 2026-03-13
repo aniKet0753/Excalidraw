@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import { supabase } from "./wsSupabase";
 
 const ws = new WebSocketServer({ port :8080});
+const rooms: Record<string, WebSocket[]> = {}
 
 function checkuserexist(token : string) : string | null {
   const decode = jwt.verify(token, process.env.JWT_SECRET ||"");
@@ -50,19 +51,37 @@ ws.on("connection",function connection(ws, request){
   })
   
   ws.on('message',async function message(data){
+    
    const parsesata = JSON.parse(data.toString());
    console.log("Received data ", parsesata);
+   // canvas collaboration
+if (
+  parsesata.type === "draw" ||
+  parsesata.type === "rectangle" ||
+  parsesata.type === "circle" ||
+  parsesata.type === "arrow"
+) {
+
+  const roomSlug = parsesata.roomId;
+
+  users.forEach(u => {
+    if (u.ws !== ws && u.room.includes(roomSlug)) {
+      u.ws.send(JSON.stringify(parsesata));
+    }
+  });
+
+}
 
    if(parsesata.type == "join_room") {//join checked
     const user = users.find(u => u.ws == ws);
-    user?.room.push(parsesata.roomSlug);
+    user?.room.push(parsesata.roomId);
    }
    if(parsesata.type == "leave_room") {
     const user = users.find(u=> u.ws == ws);
     if(!user) {
       return null;
     }
-    user.room = user?.room.filter(r => r !== parsesata.roomSlug);
+    user.room = user?.room.filter(r => r !== parsesata.roomId);
    }
    if(parsesata.type == "send_message") {//send checked not fix , its getting it own message once on send message it shouild 
     //send not other not broadcast to its own 
