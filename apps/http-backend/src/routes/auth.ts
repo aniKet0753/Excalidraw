@@ -42,13 +42,13 @@ const isMatch = await bcrypt.compare(
       user.password
     );      
       if (!isMatch) {
-      return res.status(401).json({ message: "passeord is incorrect" });
+      return res.status(401).json({ message: "password is incorrect" });
     }
 
     const token = jwt.sign(
       { userId: user.id, email : email },
       process.env.JWT_SECRET || "",
-       { expiresIn: '7d' }
+       { expiresIn: '90d' }
     );
     
 

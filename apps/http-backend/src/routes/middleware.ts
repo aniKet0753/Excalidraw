@@ -13,9 +13,19 @@ export function middleware(req : Request,res: Response,next : NextFunction) {
     if (typeof decode === "string" || !decode.userId) {
       return res.status(401).json({ message: "Unauthorized 2" });
     }
+    
     next();
-  }catch(err) {
-    return res.status(401).json({ message: "Unauthorized 3" });
+  }catch(err:any) {
+       if (err.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: "Token expired. Please login again.",
+        code: "TOKEN_EXPIRED"
+      });
+    }
+    return res.status(401).json({
+      message: "Invalid token",
+      code: "INVALID_TOKEN"
+    });
   }
 
 }
