@@ -7,7 +7,10 @@ import { WebSocketServer,WebSocket } from "ws";
 import jwt from "jsonwebtoken";
 import { supabase } from "./wsSupabase";
 
-const ws = new WebSocketServer({ port :8080});
+const port = Number(process.env.PORT) || 8080;
+
+const ws = new WebSocketServer({ port });
+console.log("WS server running on port", port);
 const rooms: Record<string, WebSocket[]> = {}
 
 function checkuserexist(token : string) : string | null {
